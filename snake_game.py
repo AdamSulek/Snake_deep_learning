@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import pygame
-# import numpy as np
 import sys
 import time
 import random
 from math import atan2, degrees
 import numpy as np
-
 
 def display_input_data(screen, snake_synaps, x, y):
     data_label = ["F_r: ", "F_rd: ", "F_d: ", "F_dl: ", "F_l: ", "F_lt: ",
@@ -22,13 +20,11 @@ def display_input_data(screen, snake_synaps, x, y):
             screen.blit(font.render(val+str(snake_synaps[idx]),
                         True, Map.white), (x, y + (30 * idx)))
 
-
 class GameObject():
     def __init__(self, pos_x, pos_y):
         self.pos_x = pos_x
         self.pos_y = pos_y
         # self.size = size
-
 
 class Snake(GameObject):
     def set_up(self):
@@ -44,7 +40,10 @@ class Snake(GameObject):
             self.list_of_body.append([self.pos_x, self.pos_y])
 
     def detect_collision(self, map, x, y, food):
-        # poprawić kod żeby był lepiej czytelny
+        '''
+            This function detect collision of object (x, y parameter) with
+            food or with self-body.
+        '''
         if food.pos_x == x and food.pos_y == y:
             self.eat()
             food.eaten()
@@ -53,12 +52,15 @@ class Snake(GameObject):
             y_collsion = (0 <= y < map.map_size)
             for body in self.list_of_body:
                 if body[0] == x and body[1] == y:
-                    pass
                     self.die()
             if not x_collsion or not y_collsion:
                 self.die()
 
     def move(self, map, food):
+        '''
+            This function keep that moving around without food eating
+            not take place to long.
+        '''
         self.hunger -= 1
         if self.hunger == 0:
             self.die()
@@ -94,9 +96,11 @@ class Snake(GameObject):
             self.list_of_body.append([self.pos_x, self.pos_y])
 
     def brain_command(self, decision):
-        # 0 - left
-        # 1 - forward
-        # 2 - right
+        '''
+            # 0 - left
+            # 1 - forward
+            # 2 - right
+        '''
         option = np.where(decision == np.amax(decision))[1][0]
         if option == 0:
             if self.dir_swaper:
@@ -113,7 +117,6 @@ class Snake(GameObject):
                 self.direction[0], self.direction[1] = self.direction[1], self.direction[0]
             self.dir_swaper = not self.dir_swaper
 
-
 class Food(GameObject):
     def eaten(self):
         self.pos_x = random.randint(2, self.max_x - 2)
@@ -124,7 +127,6 @@ class Food(GameObject):
         self.max_y = map.map_size
         self.pos_x = random.randint(0, map.map_size)
         self.pos_y = random.randint(0, map.map_size)
-
 
 class Map():
     black = (0, 0, 0)
@@ -192,6 +194,9 @@ class Map():
         self.draw_object(screen, food.pos_x, food.pos_y, Map.block_color)
 
     def snake_collect_input(self, snake, food):
+        '''
+            This function return concatenate list from different lists.
+        '''
         snake_synaps = np.array([])
         snake_synaps = np.append(snake_synaps, self.snake_collect_food(food, snake))
         snake_synaps = np.append(snake_synaps, self.snake_food_sense(snake, food))
@@ -240,13 +245,13 @@ class Map():
                                    snake.pos_x - food.pos_x))
         if food_distance == 0.0:
             food_distance = 1.0
-        return [1.0/food_distance, food_angle/360.0]
+        return [1.0 / food_distance, food_angle / 360.0]
 
     def snake_collect_wall(self, snake):
         right_dist = float(self.map_size - snake.pos_x)
         down_dist = float(self.map_size - snake.pos_y)
-        return [1/right_dist, 1/down_dist, 1/(self.map_size - right_dist + 1),
-                1/(self.map_size - down_dist + 1)]
+        return [1 / right_dist, 1 / down_dist, 1 / (self.map_size - right_dist + 1),
+                1 / (self.map_size - down_dist + 1)]
 
     def snake_collect_direction(self, snake):
         right = 0.0
@@ -261,7 +266,7 @@ class Map():
             down = 1.0
         elif snake.direction[1] == -1:
             top = 1.0
-        return[right, down, left, top]
+        return [right, down, left, top]
 
     def snake_collect_body(self, snake):
         top = 0.0
@@ -293,9 +298,8 @@ class Map():
                     top_right = 1.0
                 else:
                     down_left = 1.0
-        return[right, down_right, down, down_left,
+        return [right, down_right, down, down_left,
                left, top_left, top, top_right]
-
 
 if __name__ == "__main__":
     pygame.init()

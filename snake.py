@@ -4,13 +4,15 @@ from tensorflow.keras.layers import Activation
 import tensorflow as tf
 import numpy as np
 import os
-# wylacza warningi
+#turn-off the warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 class SnakeBrain():
     def __init__(self):
-        # create model of snake brain
+        '''
+            This class create model of snake brain.
+        '''
         self.brain = Sequential()
         self.brain.add(Dense(16, input_dim=26, activation='sigmoid'))
         self.brain.add(Dense(16, activation='sigmoid'))
@@ -21,12 +23,22 @@ class SnakeBrain():
                            metrics=['accuracy'])
 
     def get_genotype(self):
+        '''
+            This function return weights of neural networks.
+        '''
         return self.brain.get_weights()
 
     def make_decision(self, input_data):
+        '''
+            model.predict built-in function try out the model
+            from the training data passed in argument.
+        '''
         return self.brain.predict(input_data)
 
     def set_genotype(self, genotype):
+        '''
+            Setter function, built-in.
+        '''
         self.brain.set_weights(genotype)
 
     def save_genotype(self, file):
@@ -35,35 +47,27 @@ class SnakeBrain():
     def load_genotype(self, file):
         self.brain.load_weights(file)
 
-
 if __name__ == "__main__":
     Steve = SnakeBrain()
     Anna = SnakeBrain()
 
-    sytuacja_na_mapie = np.random.random_sample((1, 26))
-    print(sytuacja_na_mapie)
+    situation_on_map = np.random.random_sample((1, 26))
+    print("situation_on_map: {}".format(situation_on_map))
 
-    print("Sytuacja na mapie")
-    print(sytuacja_na_mapie)
+    steve_decision = Steve.make_decision(situation_on_map)
+    print("steve_decision: {}".format(steve_decision))
 
-    print("Decyzja Steve:")
-    decyzja_Steve = Steve.make_decision(sytuacja_na_mapie)
-    print(decyzja_Steve)
+    anna_decision = Anna.make_decision(situation_on_map)
+    print("anna_decision: {}".format(anna_decision))
 
-    print("Decyzja Anna:")
-    decyzja_Anna = Anna.make_decision(sytuacja_na_mapie)
-    print(decyzja_Anna)
-
-    print("Zamiana genow")
+    print("Steve genotype is changed by Anna genotype")
     genotype = Anna.get_genotype()
     Steve.set_genotype(genotype)
 
-    print("Decyzje po zmianie genow")
-    print("Anna:")
-    print(Anna.make_decision(sytuacja_na_mapie))
-    print("Steve:")
-    print(Steve.make_decision(sytuacja_na_mapie))
+    print("Decision after genotype changed")
+    print("Anna: {}".format(Anna.make_decision(situation_on_map)))
+    print("Steve: {}".format(Steve.make_decision(situation_on_map)))
 
-    print(type(decyzja_Anna))
-    print(np.where(decyzja_Anna == np.amax(decyzja_Anna)))
-    print(np.where(decyzja_Anna == np.amax(decyzja_Anna))[1][0])
+    print(type(anna_decision))
+    print(np.where(anna_decision == np.amax(anna_decision)))
+    print(np.where(anna_decision == np.amax(anna_decision))[1][0])

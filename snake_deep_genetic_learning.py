@@ -1,9 +1,9 @@
-import Snake_game
-import Snake_test_function
-from Snake import SnakeBrain
-import Snake_Gui
+import snake_game
+import snake_test_function
+from snake import SnakeBrain
+import snake_gui
 import pygame
-import MutationBreading
+import mutationbreading
 
 pygame.init()
 
@@ -21,18 +21,18 @@ snake_body.set_up()
 
 # Set up basic data
 snake_brain = SnakeBrain()
-gui = Snake_Gui.GameMenu(screen, snake_brain, snake_body, food_obj, map)
-population_list = MutationBreading.generation_zero(snake_brain.get_genotype())
+gui = snake_gui.GameMenu(screen, snake_brain, snake_body, food_obj, map)
+population_list = mutationbreading.generation_zero(snake_brain.get_genotype())
 
 # Intro menu
-Snake_Gui.game_main_menu(screen)
+snake_gui.game_main_menu(screen)
 
 while gui.operating:
     gui.game_set_up_menu()
     if gui.gen_counter != 0 and not gui.load:
-        couples = Snake_test_function.find_best_champions(evaluation_list, 10)
+        couples = snake_test_function.find_best_champions(evaluation_list, 10)
         print(couples)
-        population_list = MutationBreading.populate_mult(population_list,
+        population_list = mutationbreading.populate_mult(population_list,
                                                          couples,
                                                          gui,
                                                          gui.list_of_menu[2][1],
@@ -40,7 +40,7 @@ while gui.operating:
                                                          )
     if gui.load:
         load_gen = snake_brain.get_genotype()
-        population_list = MutationBreading.generation_zero(load_gen,
+        population_list = mutationbreading.generation_zero(load_gen,
                                                            gui.list_of_menu[2][1],
                                                            gui.list_of_menu[0][1])
         gui.load = False
@@ -52,7 +52,7 @@ while gui.operating:
         gui.processing(progress)
         evaluation_list.append(gui.eval)
         progress = float(idx)/len(population_list)
-    champion = Snake_test_function.find_champion(evaluation_list)
+    champion = snake_test_function.find_champion(evaluation_list)
     gui.gen_counter += 1
     snake_brain.set_genotype(population_list[champion])
     gui.loop_chk = True

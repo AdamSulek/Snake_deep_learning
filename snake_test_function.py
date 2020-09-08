@@ -2,7 +2,6 @@ import os
 import numpy as np
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-
 def snake_test(snake_brain, map, snake_body, food_obj):
     count = 0
     snake_body.reset()
@@ -14,26 +13,40 @@ def snake_test(snake_brain, map, snake_body, food_obj):
         count += 1
     return (evaluate(snake_body, count))
 
-
 def snake_test_animation(snake_brain, map, snake_body, food_obj):
     input = map.snake_collect_input(snake_body, food_obj)
     output = snake_brain.make_decision(input)
     snake_body.brain_command(output)
     snake_body.move(map, food_obj)
 
-
 def evaluate(snake_body, count):
-    if snake_body.hunger == 0:
+    '''
+        This function return value according to snake body length and number of
+        eaten food.
+    '''
+    if not snake_body.hunger:
         return ((snake_body.length - 4) * 1000) + count - 1000
     else:
         return ((snake_body.length - 4) * 1000) + count
 
-
 def move_translator(output):
+    '''
+        This function return index of max value in decision list, example:
+
+        anna_decision: [[0.33503884 0.26337668 0.40158442]]
+        np.where(output == np.amax(output))
+        output: (array([0]), array([2]))
+        np.where(output == np.amax(output))[1][0]
+        output: 2
+    '''
     return np.where(output == np.amax(output))[1][0]
 
-
 def find_champion(evaluation_list):
+    '''
+        This function replace max built-in function used on list.
+        This function find max value and return index of max value for another
+        iterable object like numpy array.
+    '''
     index_val = 0
     max_val = 0
     for idx, val in enumerate(evaluation_list):
@@ -42,19 +55,21 @@ def find_champion(evaluation_list):
             index_val = idx
     return index_val
 
-
 def find_best_champions(evaluation_list, number):
+    '''
+        This function return list of index for the highest number.
+        First (0) element of the list is the index of highest number and
+        the last element is index of the lowest number.
+    '''
     breeding_couple = []
     for i in range(number):
         breeding_couple.append(find_champion(evaluation_list))
         evaluation_list[breeding_couple[i]] = 0
     return breeding_couple
 
-
-
 if __name__ == "__main__":
-    from Snake import SnakeBrain
-    import Snake_game
+    from snake import SnakeBrain
+    import snake_game
     import pygame
     import sys
 

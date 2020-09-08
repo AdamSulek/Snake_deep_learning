@@ -1,11 +1,14 @@
 import pygame
 import sys
-import Snake_test_function
+import snake_test_function
 import json
 import os
 
 
 def game_main_menu(screen):
+    '''
+        This function set pygame parameter.
+    '''
     font_big = pygame.font.SysFont("Ubuntu", 108)
     font_small = pygame.font.SysFont("Ubuntu", 32)
     color_s = (255, 255, 255)
@@ -63,7 +66,6 @@ def game_main_menu(screen):
             screen.blit(quit, quit_rect)
         pygame.display.flip()
         #print(pygame.mouse.get_pos())
-
 
 class GameMenu():
     black = (0, 0, 0)
@@ -382,8 +384,6 @@ class GameMenu():
             pass
         else:
             self.list_of_menu[2][1] -= 100
-
-
 
 if __name__ == "__main__":
     pygame.init()
