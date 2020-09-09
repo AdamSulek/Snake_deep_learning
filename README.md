@@ -5,11 +5,11 @@ network and genetic algorythm in Python.
 
 The snake brain - represents by neural network contains 26 neurons
 with information about situation on a game-map, where:
-    direction of the food: 8 neurons (snake_collect_food function)
-    direction and angel between head and food: 2 neurons (snake_food_sense)
-    distance to wall: 4 nuerons (snake_collect_wall)
-    direction of the snake moving: 4 nuerons (snake_collect_direction)
-    direction of the snake body: 8 neurons (snake_collect_body)
+    direction of the food: 8 neurons
+    direction and angel between head and food: 2 neurons 
+    distance to wall: 4 nuerons 
+    direction of the snake moving: 4 nuerons 
+    direction of the snake body: 8 neurons 
 
 The second layer was choosen to be sufficient in the network
 architecture as hidden layer.
