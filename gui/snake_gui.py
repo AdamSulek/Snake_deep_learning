@@ -1,6 +1,6 @@
 import pygame
 import sys
-import snake_test_function
+from functions import snake_test_function
 import json
 import os
 
@@ -193,7 +193,7 @@ class GameMenu():
         self.snake_body.reset()
         count = 0
         while self.snake_body.alive:
-            Snake_test_function.snake_test_animation(self.snake_brain,
+            snake_test_function.snake_test_animation(self.snake_brain,
                                                      self.map,
                                                      self.snake_body,
                                                      self.food_obj)
@@ -205,7 +205,7 @@ class GameMenu():
             self.progress_animation(progress)
             self.map.map_draw(self.screen, self.snake_body, self.food_obj)
             pygame.display.flip()
-        self.eval = Snake_test_function.evaluate(self.snake_body, count)
+        self.eval = snake_test_function.evaluate(self.snake_body, count)
 
     def breeding_anim(self):
         self.anim_clock()

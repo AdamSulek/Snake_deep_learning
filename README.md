@@ -2,4 +2,20 @@
 
 The aim of this project is automatically play a snake game using a neural
 network and genetic algorythm in Python.
-snake_deep_genetic_learning.py is executable file.
+
+The snake brain - represents by neural network contains 26 neurons
+with information about situation on a game-map, where:
+    direction of the food: 8 neurons (snake_collect_food function)
+    direction and angel between head and food: 2 neurons (snake_food_sense)
+    distance to wall: 4 nuerons (snake_collect_wall)
+    direction of the snake moving: 4 nuerons (snake_collect_direction)
+    direction of the snake body: 8 neurons (snake_collect_body)
+
+The second layer was choosen to be sufficient in the network
+architecture as hidden layer.
+
+The third layer is output layer with decision direction:
+  0 - left, 1 - forword, 2 - right.
+
+This project used tensorflow library to built neural network
+and pygame library to show the results of self-teaching by snake.

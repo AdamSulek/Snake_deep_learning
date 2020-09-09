@@ -2,27 +2,52 @@ import random
 import pygame
 import numpy as np
 from copy import deepcopy
-import snake_gui
-
-screen = pygame.display.set_mode((display_width, display_hight))
-gui = snake_gui.GameMenu(screen, snake_brain, snake_body, food_obj, map)
+from gui import snake_gui
 
 def create_new_genom(mother, father):
-        genotype = deepcopy(mother)
-        for idx, genom in enumerate(genotype):
-            if len(genom.shape) == 2:
-                for (x, y), gen in np.ndenumerate(genom):
-                    decision = random.choice([0, 2])
-                    if decision == 0:
-                        genotype[idx][x, y] = father[idx][x, y]
-                    elif decision == 1:
-                        genotype[idx][x, y] = (father[idx][x, y] + gen)/2
-        return genotype
+    '''
+        Input format:
+            mother and father as genotype has format:
+                type: <class 'list'>
+                len: 6
+                each element of list - type: numpy ndarray
+                                       len:  26 as length neurons leyer
+                                       26 weigth , 26 biases
+                                       the last one len is 3 (output biases)
+
+        This function generates genotype with randomly choosing genes
+        from two genomes (mother and father).
+
+        Deepcopy is using to create another genotype with different adress,
+        but with the same rewritten values (not only poiting to the genotype
+        adress).
+    '''
+    genotype = deepcopy(mother)
+    for idx, genom in enumerate(genotype):
+        if len(genom.shape) == 2:
+            for (x, y), gen in np.ndenumerate(genom):
+                decision = random.choice([0, 2])
+                if decision == 0:
+                    genotype[idx][x, y] = father[idx][x, y]
+                elif decision == 1:
+                    genotype[idx][x, y] = (father[idx][x, y] + gen)/2
+    return genotype
 
 def mutation(genotype, prop = 0.1):
+    '''
+        Input format:
+            genotype - was describe in create_new_genom function documentation
+            (mother , father).
+
+        This function keep the format of input with genom.shape == 2.
+
+        Mutation function change with some propability (default=0.1) genom
+        (weights) value.
+    '''
     genotype_new = deepcopy(genotype)
     for idx, genom in enumerate(genotype_new):
         if len(genom.shape) == 2:
+            #range of propability of mutation occurs
             if random.uniform(0, 1) <= prop:
                 for (x, y), gen in np.ndenumerate(genom):
                     # decision = random.choice([0, 1])
@@ -44,15 +69,35 @@ def mutation(genotype, prop = 0.1):
 
 
 def populate(genotype_father, genotype_mother, NoB=1000, prop=0.1):
+    '''
+        Input format:
+            genotype_father and genotype_mother - was describe in
+            create_new_genom function documentation (mother, father).
+
+        This function create population list which contain individual with
+        genotype inherits from two parents and some mutation may occure.
+    '''
     population_list = []
     for i in range(NoB):
         population_list.append(mutation(create_new_genom(genotype_father,
                                                          genotype_mother),
-                                        prop))
+                                                         prop))
     return population_list
 
 
 def populate_mult(population_list, breading_couple, gui, NoB=1000, prop=0.1):
+    '''
+        Input format:
+            population_list - was describe in create_new_genom function
+            documentation (mother, father).
+            breading_couple - was describe in create_new_genom function
+            documentation (mother, father).
+            gui - GameMenu class object
+
+        This function create population which contain individual with
+        genotype inherits from two parents and some mutation may occure
+        on specific randomly choosen gen (iterable of breading_couple).
+    '''
     population_list = []
     for par_num in range(len(breading_couple)-1):
         for i in range(int(NoB/len(breading_couple)-1)):
@@ -68,12 +113,16 @@ def populate_mult(population_list, breading_couple, gui, NoB=1000, prop=0.1):
                                         prop))
     for snake in breading_couple:
         population_list.append(population_list[snake])
+
     return population_list
 
 
 def generation_zero(genotype, NoB=1000, prop=0.1):
     '''
-        This function create a list of population. Every individual in
+        Input format:
+            genotype - was describe in create_new_genom function documentation.
+
+        This function creates a list of population. Every individual in
         population list has genotype (weights and biases) created with
         mutation function.
     '''
@@ -108,16 +157,3 @@ if __name__ == "__main__":
 
     print("large pop")
     print(len(large_pop))
-
-    # Steve.set_genotype(large_pop[-1])
-    # print(Steve.make_decision(situation))
-
-    # Potomek.set_genotype(potomek)
-    # print("Potomek decyzja")
-    # print(Potomek.make_decision(situation))
-    #
-    # potomek = mutation(potomek)
-    #
-    # Potomek.set_genotype(potomek)
-    # print("Zmutowany potomek decyzja")
-    # print(Potomek.make_decision(situation))

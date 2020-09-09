@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pygame
 import sys
 import time
@@ -24,7 +23,6 @@ class GameObject():
     def __init__(self, pos_x, pos_y):
         self.pos_x = pos_x
         self.pos_y = pos_y
-        # self.size = size
 
 class Snake(GameObject):
     def set_up(self):
@@ -82,6 +80,10 @@ class Snake(GameObject):
         self.alive = False
 
     def reset(self, reset_pos_x=None, reset_pos_y=None):
+        '''
+            This function restore default snake properties like:
+            length, position, direction, hunger.
+        '''
         self.hunger = 400
         self.alive = True
         self.list_of_body = []
@@ -97,9 +99,10 @@ class Snake(GameObject):
 
     def brain_command(self, decision):
         '''
-            # 0 - left
-            # 1 - forward
-            # 2 - right
+            This function choose direction according to decision:
+                # 0 - left
+                # 1 - forward
+                # 2 - right
         '''
         option = np.where(decision == np.amax(decision))[1][0]
         if option == 0:
@@ -207,6 +210,12 @@ class Map():
         return np.array([snake_synaps])
 
     def snake_collect_food(self, food, snake):
+        '''
+            This function return direction of the food.
+            Only the one element represents the direction has 1.0, another
+            has 0.0.
+            It represents 8 neurons.
+        '''
         top = 0.0
         left = 0.0
         right = 0.0
@@ -235,25 +244,40 @@ class Map():
                 top_right = 1.0
             else:
                 down_left = 1.0
-        return[right, down_right, down, down_left,
+
+        return [right, down_right, down, down_left,
                left, top_left, top, top_right]
 
     def snake_food_sense(self, snake, food):
+        '''
+            This function return list with distance [0] and angel [1] to food.
+            These values are normalized 0-1, each neuron input get 0-1 values.
+            It represents 2 neurons.
+        '''
         food_distance = (((snake.pos_x - food.pos_x)**2) +
                          ((snake.pos_y - food.pos_y)**2))**(.5)
         food_angle = degrees(atan2(snake.pos_y - food.pos_y,
                                    snake.pos_x - food.pos_x))
         if food_distance == 0.0:
             food_distance = 1.0
+
         return [1.0 / food_distance, food_angle / 360.0]
 
     def snake_collect_wall(self, snake):
+        '''
+            This function return 4 distance to each wall.
+            It represents 4 neurons.
+        '''
         right_dist = float(self.map_size - snake.pos_x)
         down_dist = float(self.map_size - snake.pos_y)
         return [1 / right_dist, 1 / down_dist, 1 / (self.map_size - right_dist + 1),
                 1 / (self.map_size - down_dist + 1)]
 
     def snake_collect_direction(self, snake):
+        '''
+            This function return the direction of the snake moving.
+            It represents 4 neurons.
+        '''
         right = 0.0
         down = 0.0
         left = 0.0
@@ -269,6 +293,10 @@ class Map():
         return [right, down, left, top]
 
     def snake_collect_body(self, snake):
+        '''
+            This function return list of 8 direction, if snake body is on
+            each direction the value is 1.0, another 0.0.
+        '''
         top = 0.0
         left = 0.0
         right = 0.0
@@ -298,6 +326,7 @@ class Map():
                     top_right = 1.0
                 else:
                     down_left = 1.0
+
         return [right, down_right, down, down_left,
                left, top_left, top, top_right]
 

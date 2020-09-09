@@ -57,9 +57,12 @@ def find_champion(evaluation_list):
 
 def find_best_champions(evaluation_list, number):
     '''
-        This function return list of index for the highest number.
+        This function generate list of index for the highest number.
         First (0) element of the list is the index of highest number and
         the last element is index of the lowest number.
+
+        This function return list of the best breeding. The length of theses
+        list is set by number argument.
     '''
     breeding_couple = []
     for i in range(number):

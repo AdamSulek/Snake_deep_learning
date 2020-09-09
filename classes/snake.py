@@ -11,11 +11,30 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 class SnakeBrain():
     def __init__(self):
         '''
-            This class create model of snake brain.
+            This class create model of snake brain - represents by neural network.
+
+            The first layer contains 16 neurons with information about situation
+            on a map:
+
+            direction of the food: 8 neurons (snake_collect_food function)
+            direction and angel between head and food: 2 neurons (snake_food_sense)
+            distance to wall: 4 nuerons (snake_collect_wall)
+            direction of the snake moving: 4 nuerons (snake_collect_direction)
+            direction of the snake body: 8 neurons (snake_collect_body)
+
+            The second layer was choosen to be sufficient in the network
+            architecture as hidden layer.
+
+            The third layer is output layer with decision direction:
+                0 - left
+                1 - forword
+                2 - right
         '''
         self.brain = Sequential()
-        self.brain.add(Dense(16, input_dim=26, activation='sigmoid'))
-        self.brain.add(Dense(16, activation='sigmoid'))
+        # self.brain.add(Dense(16, input_dim=26, activation='sigmoid'))
+        # self.brain.add(Dense(16, activation='sigmoid'))
+        self.brain.add(Dense(26, input_dim=26, activation='sigmoid'))
+        self.brain.add(Dense(26, activation='sigmoid'))
         self.brain.add(Dense(3, activation='sigmoid'))
         self.brain.add(Activation("softmax"))
         self.brain.compile(optimizer="adam",
@@ -37,7 +56,7 @@ class SnakeBrain():
 
     def set_genotype(self, genotype):
         '''
-            Setter function, built-in.
+            Setter function, built-in in tensorflow.
         '''
         self.brain.set_weights(genotype)
 
@@ -71,3 +90,8 @@ if __name__ == "__main__":
     print(type(anna_decision))
     print(np.where(anna_decision == np.amax(anna_decision)))
     print(np.where(anna_decision == np.amax(anna_decision))[1][0])
+
+    anna_genotype = Anna.get_genotype()
+    print("anna_genotype type: {}".format(type(anna_genotype)))
+    print("anna_genotype len: {}".format(len(anna_genotype)))
+    print("anna_genotype: {}".format(anna_genotype))

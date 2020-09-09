@@ -1,9 +1,9 @@
-import snake_game
-import snake_test_function
-from snake import SnakeBrain
-import snake_gui
+from classes import snake_game
+from functions import snake_test_function
+from classes.snake import SnakeBrain
+from gui import snake_gui
 import pygame
-import mutationbreading
+from functions import mutationbreading
 
 pygame.init()
 
@@ -13,9 +13,9 @@ display_hight = 768
 screen = pygame.display.set_mode((display_width, display_hight))
 
 # Set up game parameters
-snake_body = Snake_game.Snake(20, 20)
-food_obj = Snake_game.Food(0, 0)
-map = Snake_game.Map(30, 30, 15, 40)
+snake_body = snake_game.Snake(20, 20)
+food_obj = snake_game.Food(0, 0)
+map = snake_game.Map(30, 30, 15, 40)
 food_obj.create(map)
 snake_body.set_up()
 
